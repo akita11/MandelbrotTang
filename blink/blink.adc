@@ -1,0 +1,6 @@
+set_pin_assignment	{ RST_N }	{ LOCATION = K16; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ R_LED }	{ LOCATION = R3; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ clk24M }	{ LOCATION = K14; IOSTANDARD = LVCMOS33; }
+
+
+

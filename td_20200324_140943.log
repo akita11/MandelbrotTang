@@ -1,0 +1,55 @@
+============================================================
+   Tang Dynasty, V4.6.14756
+   Copyright:   Shanghai Anlogic Infotech Co., Ltd.
+                2011 - 2021
+   Executable = C:/Anlogic/TD4.6.3/bin/td.exe
+   Built at =   17:01:29 Oct 21 2019
+   Run by =     akita
+   Run Date =   Tue Mar 24 14:09:43 2020
+
+   Run on =     LAPTOP-E0CJ65QR
+============================================================
+RUN-1002 : start command "import_device eagle_s20.db -package BG256 -basic"
+ARC-1001 : Device Initialization.
+ARC-1001 : ------------------------------------------------------------------
+ARC-1001 :            OPTION            |          IO          |   SETTING   
+ARC-1001 : ------------------------------------------------------------------
+ARC-1001 :   cso_b/cclk/mosi/miso/dout  |  T3/R11/T10/P10/S11  |    gpio    
+ARC-1001 :             done             |         P13          |    gpio    
+ARC-1001 :           program_b          |          T2          |  dedicated  
+ARC-1001 :        tdi/tms/tck/tdo       |   C12/A15/C14/E14    |  dedicated  
+ARC-1001 : ------------------------------------------------------------------
+ARC-1004 : Device setting, marked 5 dedicate IOs in total.
+RUN-1002 : start command "read_verilog -file al_ip/vram.v"
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-1200 : Current top model is vram
+HDL-1100 : Inferred 0 RAMs.
+RUN-1002 : start command "optimize_rtl"
+RUN-1001 : Open license file C:/Anlogic/TD4.6.3/license/Anlogic.lic
+SYN-1012 : SanityCheck: Model "vram"
+SYN-1011 : Flatten model vram
+SYN-1014 : Optimize round 1
+SYN-1032 : 46/0 useful/useless nets, 3/0 useful/useless insts
+SYN-1019 : Optimized 0 mux instances.
+SYN-1015 : Optimize round 1, 0 better
+RUN-1002 : start command "map_macro -nopad"
+SYN-2501 : Processed 0 LOGIC_BUF instances.
+SYN-2512 : LOGIC BRAM "inst"
+SYN-2571 : Optimize after map_dsp, round 1
+SYN-1032 : 291/0 useful/useless nets, 251/0 useful/useless insts
+SYN-1016 : Merged 180 instances.
+SYN-2571 : Optimize after map_dsp, round 1, 180 better
+SYN-2571 : Optimize after map_dsp, round 2
+SYN-1032 : 111/0 useful/useless nets, 71/0 useful/useless insts
+SYN-2571 : Optimize after map_dsp, round 2, 0 better
+SYN-2501 : Optimize round 1
+SYN-1032 : 110/0 useful/useless nets, 70/0 useful/useless insts
+SYN-2501 : Optimize round 1, 5 better
+SYN-2501 : Optimize round 2
+SYN-1032 : 110/0 useful/useless nets, 70/0 useful/useless insts
+SYN-2501 : Optimize round 2, 0 better
+SYN-1032 : 147/5 useful/useless nets, 107/5 useful/useless insts
+RUN-1002 : start command "write_verilog al_ip/vram_sim.v"
+HDL-1201 : write out verilog file al_ip/vram_sim.v

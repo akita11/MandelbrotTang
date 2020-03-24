@@ -14,8 +14,9 @@
             <File>mandel.v</File>
             <File>al_ip/pll.v</File>
             <File>video.v</File>
+            <File>uart.v</File>
         </Verilog>
-        <ADC_FILE/>
+        <ADC_FILE>mandelbrotTang.adc</ADC_FILE>
         <SDC_FILE/>
         <CWC_FILE/>
     </Source_Files>
@@ -25,7 +26,7 @@
         <CREATEINDEX>user</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2020-03-24 14:44:44</Step_Last_Change>
+        <Step_Last_Change>2020-03-24 15:03:00</Step_Last_Change>
         <Current_Step>0</Current_Step>
         <Step_Status>true</Step_Status>
     </Project_Settings>

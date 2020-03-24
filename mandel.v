@@ -24,14 +24,19 @@
 `define DCX    `N_BIT'b0000_000001000000          // 1/64
 `define DCY    `N_BIT'b0000_000001000000          // 1/64
 
-module main(clk24M, rst,
+module main(clk24M, rst_n,
 			vsync, hsync,
-			lcd_rout, lcd_gout, lcd_bout
+			lcd_rout, lcd_gout, lcd_bout,
+			TXD, RXD,
+			led_r_b, led_g_b, led_b_b
 			);
    
-	input clk24M, rst;
+	input clk24M, rst_n;
    	output vsync, hsync;
    	output [7:0] lcd_rout, lcd_gout, lcd_bout;
+   	output TXD;
+   	input RXD;
+   	output led_r_b, led_g_b, led_b_b;
 	// z(n+1) <= z(n)^2 + C, z0=0
 
   	// parallel multipluer
@@ -48,10 +53,21 @@ module main(clk24M, rst,
    	reg [8:0] px, py;
    	reg [`N_BIT - 1:0] cx, cy, x, y, xx, yy, ma, mb, sa, sb;
    	wire [`N_BIT - 1:0] mp, ss;
+
+    reg 		       f_operating;
+    reg [`N_BIT - 1:0]  r_cxs, r_cys, r_dcx, r_dcy;
+    reg [7:0] 	       r_pix_x, r_pix_y;
+    reg [7:0] 	       t_data;
+    wire [7:0] 	       r_data;
+    reg 		       t_start;
+    wire 	       t_busy, r_ready;
+    reg [1:0] 	       f_receiving; 		       
+    reg [4:0] 	       n_byte;
+
    	reg [15:0] max_iterate;
 
-
 //module pll(refclk, reset, extlock, clk0_out);
+	assign rst = ~rst_n;
 	assign clk = clk24M;
 	pll pll(clk, rst, pll_lock, vclk);
 /*
@@ -85,14 +101,65 @@ module video(
 				clk,
 				wx, wy, wd);
 
+    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
+    RX8 rx8(clk, rst, RXD, r_data, r_ready);
+
   	mult m0(ma, mb, mp);  
    	add  a0(sa, sb, ss);
    	always @(posedge clk) begin
+        if (f_receiving == 0 && r_ready == 1) begin
+            f_receiving <= 1;
+        end
+        if (f_receiving == 1) begin
+            f_receiving <= 2;
+            n_byte <= n_byte + 1;
+            if (n_byte == 0) r_pix_x <= r_data;
+            if (n_byte == 1) r_pix_y <= r_data;
+            if (n_byte == 2) r_cxs[15:8] <= r_data;
+            if (n_byte == 3) r_cxs[7:0] <= r_data;
+            if (n_byte == 4) r_cys[15:8] <= r_data;
+            if (n_byte == 5) r_cys[7:0] <= r_data;
+            if (n_byte == 6) r_dcx[15:8] <= r_data;
+            if (n_byte == 7) r_dcx[7:0] <= r_data;
+            if (n_byte == 8) r_dcy[15:8] <= r_data;
+            if (n_byte == 9) r_dcy[7:0] <= r_data;
+            if (n_byte == 9) begin
+                cx <= r_cxs; cy <= r_cys;
+                fFinish <= 0;
+                f_operating <= 1;
+                fIterating <= 1;
+                n_byte <= 0;
+            end
+        end
+        if (f_receiving == 2 && r_ready == 0) begin
+            f_receiving <= 0;
+        end
+
+        if (f_operating == 1) begin
+            if (fIterating == 0) begin
+                t_data <= i; t_start <= 1;
+            end
+            else begin
+                t_start <= 0;
+            end
+        end
+        else begin
+            t_start <= 0;
+        end
+
     	if (rst == 1) begin
-	 		cx <= `CXS; cy <= `CYS;
-	 		px <= 0; py <= 0; // pixel coordinates
-	 		x <= 0; y <= 0;
-	 		i <= 0; fIterating <= 1; st <= 0; fResult <= 0; fFinish <= 0;
+            px <= 0; py <= 0; // pixel coordinates
+            x <= 0; y <= 0;
+            i <= 0; fIterating <= 0; st <= 0; fResult <= 0; fFinish <= 1;
+            t_start <= 0;
+            t_data <= 0;
+            f_receiving <= 0;
+            f_operating <= 0;
+            n_byte <= 0;
+            cx <= 0; cy <= 0;
+            r_cxs <= 0; r_cys <= 0;
+            r_dcx <= 0; r_dcy <= 0;
+            r_pix_x <= 0; r_pix_y <= 0;
 	 		max_iterate <= 100;
       	end
       	else begin

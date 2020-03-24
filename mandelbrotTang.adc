@@ -7,8 +7,10 @@ set_pin_assignment	{ led_r_b }	{ LOCATION = R3; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_g_b }	{ LOCATION = J14; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_b_b }	{ LOCATION = P13; IOSTANDARD = LVCMOS33; }
 
-set_pin_assignment	{ vsync }	{ LOCATION = R1; IOSTANDARD = LVCMOS33; }
-set_pin_assignment	{ hsync }	{ LOCATION = P1; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ lcd_pclk }	{ LOCATION = L1; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ lcd_de }	{ LOCATION = L4; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ lcd_vsync }	{ LOCATION = R1; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ lcd_hsync }	{ LOCATION = P1; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_rout[0] }	{ LOCATION = B2; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_rout[1] }	{ LOCATION = A2; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_rout[2] }	{ LOCATION = C3; IOSTANDARD = LVCMOS33; }

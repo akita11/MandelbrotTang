@@ -25,14 +25,13 @@
 `define DCY    `N_BIT'b0000_000001000000          // 1/64
 
 module main(clk24M, rst_n,
-			vsync, hsync,
-			lcd_rout, lcd_gout, lcd_bout,
+			lcd_pclk, lcd_de, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
 			TXD, RXD,
 			led_r_b, led_g_b, led_b_b
 			);
    
 	input clk24M, rst_n;
-   	output vsync, hsync;
+   	output lcd_pclk, lcd_de, lcd_vsync, lcd_hsync;
    	output [7:0] lcd_rout, lcd_gout, lcd_bout;
    	output TXD;
    	input RXD;
@@ -100,6 +99,8 @@ module video(
 				rout, gout, bout,
 				clk,
 				wx, wy, wd);
+	assign lcd_pclk = vclk;
+	assign lcd_de = pixelena;
 
     TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
     RX8 rx8(clk, rst, RXD, r_data, r_ready);

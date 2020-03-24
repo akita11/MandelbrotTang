@@ -1785,3 +1785,227 @@ HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(209)
 HDL-1007 : Verilog file 'mandel.v' ignored due to errors
 HDL-1007 : analyze verilog file mandel.v
 HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file uart.v
+HDL-1007 : analyze verilog file C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-8007 ERROR: 'f_operating' is not declared in mandel.v(122)
+HDL-8007 ERROR: 'f_operating' is not declared in mandel.v(131)
+HDL-8007 ERROR: 'f_operating' is not declared in mandel.v(150)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(232)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(238)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(254)
+HDL-1007 : Verilog file 'mandel.v' ignored due to errors
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+RUN-1002 : start command "elaborate -top main"
+HDL-5007 WARNING: port 'we' remains unconnected for this instance in mandel.v(97)
+HDL-1007 : elaborate module main in mandel.v(27)
+HDL-1007 : elaborate module pll in al_ip/pll.v(22)
+HDL-1007 : elaborate module EG_PHY_PLL(FIN="24.000",FBCLK_DIV=43,CLKC0_DIV=41,CLKC0_ENABLE="ENABLE",FEEDBK_MODE="NOCOMP",STDBY_ENABLE="DISABLE",CLKC0_CPHASE=40,GMC_GAIN=2,ICP_CURRENT=9,KVCO=2,LPF_CAPACITOR=1,LPF_RESISTOR=8,SYNC_ENABLE="DISABLE") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(986)
+HDL-1007 : elaborate module video in video.v(45)
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dia' in video.v(94)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dob' in video.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'rout' in mandel.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'wx' in mandel.v(97)
+HDL-1007 : elaborate module TX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(1)
+HDL-1007 : elaborate module RX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-8007 ERROR: net 'rxdb' is constantly driven from multiple places in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(64)
+HDL-8007 ERROR: another driver from here in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(99)
+HDL-1007 : module 'RX8' remains a black box, due to errors in its contents in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : elaborate module mult in mandel.v(242)
+HDL-1007 : elaborate module add in mandel.v(236)
+HDL-5007 WARNING: net 'wx' does not have a driver in mandel.v(97)
+HDL-5007 WARNING: net 'RXD' does not have a driver in mandel.v(100)
+HDL-5007 WARNING: input port 'we' remains unconnected for this instance in mandel.v(91)
+HDL-8007 ERROR: RX8 is a black box in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+RUN-1002 : start command "elaborate -top main"
+HDL-5007 WARNING: port 'we' remains unconnected for this instance in mandel.v(97)
+HDL-1007 : elaborate module main in mandel.v(27)
+HDL-1007 : elaborate module pll in al_ip/pll.v(22)
+HDL-1007 : elaborate module EG_PHY_PLL(FIN="24.000",FBCLK_DIV=43,CLKC0_DIV=41,CLKC0_ENABLE="ENABLE",FEEDBK_MODE="NOCOMP",STDBY_ENABLE="DISABLE",CLKC0_CPHASE=40,GMC_GAIN=2,ICP_CURRENT=9,KVCO=2,LPF_CAPACITOR=1,LPF_RESISTOR=8,SYNC_ENABLE="DISABLE") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(986)
+HDL-1007 : elaborate module video in video.v(45)
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dia' in video.v(94)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dob' in video.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'rout' in mandel.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'wx' in mandel.v(97)
+HDL-1007 : elaborate module TX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(1)
+HDL-1007 : elaborate module RX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-8007 ERROR: net 'rxdb' is constantly driven from multiple places in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(64)
+HDL-8007 ERROR: another driver from here in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(99)
+HDL-1007 : module 'RX8' remains a black box, due to errors in its contents in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : elaborate module mult in mandel.v(242)
+HDL-1007 : elaborate module add in mandel.v(236)
+HDL-5007 WARNING: net 'wx' does not have a driver in mandel.v(97)
+HDL-5007 WARNING: net 'RXD' does not have a driver in mandel.v(100)
+HDL-5007 WARNING: input port 'we' remains unconnected for this instance in mandel.v(91)
+HDL-8007 ERROR: RX8 is a black box in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+RUN-1002 : start command "elaborate -top main"
+HDL-5007 WARNING: port 'we' remains unconnected for this instance in mandel.v(97)
+HDL-1007 : elaborate module main in mandel.v(27)
+HDL-1007 : elaborate module pll in al_ip/pll.v(22)
+HDL-1007 : elaborate module EG_PHY_PLL(FIN="24.000",FBCLK_DIV=43,CLKC0_DIV=41,CLKC0_ENABLE="ENABLE",FEEDBK_MODE="NOCOMP",STDBY_ENABLE="DISABLE",CLKC0_CPHASE=40,GMC_GAIN=2,ICP_CURRENT=9,KVCO=2,LPF_CAPACITOR=1,LPF_RESISTOR=8,SYNC_ENABLE="DISABLE") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(986)
+HDL-1007 : elaborate module video in video.v(45)
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dia' in video.v(94)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dob' in video.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'rout' in mandel.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'wx' in mandel.v(97)
+HDL-1007 : elaborate module TX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(1)
+HDL-1007 : elaborate module RX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : elaborate module mult in mandel.v(242)
+HDL-1007 : elaborate module add in mandel.v(236)
+HDL-5007 WARNING: net 'wx' does not have a driver in mandel.v(97)
+HDL-5007 WARNING: net 'RXD' does not have a driver in mandel.v(100)
+HDL-5007 WARNING: input port 'we' remains unconnected for this instance in mandel.v(91)
+HDL-1200 : Current top model is main
+HDL-1100 : Inferred 0 RAMs.
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+RUN-1002 : start command "elaborate -top main"
+HDL-5007 WARNING: port 'we' remains unconnected for this instance in mandel.v(97)
+HDL-1007 : elaborate module main in mandel.v(27)
+HDL-1007 : elaborate module pll in al_ip/pll.v(22)
+HDL-1007 : elaborate module EG_PHY_PLL(FIN="24.000",FBCLK_DIV=43,CLKC0_DIV=41,CLKC0_ENABLE="ENABLE",FEEDBK_MODE="NOCOMP",STDBY_ENABLE="DISABLE",CLKC0_CPHASE=40,GMC_GAIN=2,ICP_CURRENT=9,KVCO=2,LPF_CAPACITOR=1,LPF_RESISTOR=8,SYNC_ENABLE="DISABLE") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(986)
+HDL-1007 : elaborate module video in video.v(45)
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dia' in video.v(94)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dob' in video.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'rout' in mandel.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'wx' in mandel.v(97)
+HDL-1007 : elaborate module TX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(1)
+HDL-1007 : elaborate module RX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : elaborate module mult in mandel.v(242)
+HDL-1007 : elaborate module add in mandel.v(236)
+HDL-5007 WARNING: net 'wx' does not have a driver in mandel.v(97)
+HDL-5007 WARNING: net 'RXD' does not have a driver in mandel.v(100)
+HDL-5007 WARNING: input port 'we' remains unconnected for this instance in mandel.v(91)
+HDL-1200 : Current top model is main
+HDL-1100 : Inferred 0 RAMs.
+GUI-5004 WARNING: hsync has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[0] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[0] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[0] has not been assigned location ...
+GUI-5004 WARNING: rst_n has not been assigned location ...
+GUI-5004 WARNING: vsync has not been assigned location ...
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+RUN-1002 : start command "elaborate -top main"
+HDL-5007 WARNING: port 'we' remains unconnected for this instance in mandel.v(97)
+HDL-1007 : elaborate module main in mandel.v(27)
+HDL-1007 : elaborate module pll in al_ip/pll.v(22)
+HDL-1007 : elaborate module EG_PHY_PLL(FIN="24.000",FBCLK_DIV=43,CLKC0_DIV=41,CLKC0_ENABLE="ENABLE",FEEDBK_MODE="NOCOMP",STDBY_ENABLE="DISABLE",CLKC0_CPHASE=40,GMC_GAIN=2,ICP_CURRENT=9,KVCO=2,LPF_CAPACITOR=1,LPF_RESISTOR=8,SYNC_ENABLE="DISABLE") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(986)
+HDL-1007 : elaborate module video in video.v(45)
+HDL-1007 : elaborate module vram in al_ip/vram.v(14)
+HDL-1007 : elaborate module EG_LOGIC_BRAM(DATA_WIDTH_A=3,DATA_WIDTH_B=3,ADDR_WIDTH_A=17,ADDR_WIDTH_B=17,DATA_DEPTH_A=131072,DATA_DEPTH_B=131072,MODE="PDPW") in C:/Anlogic/TD4.6.3/arch/eagle_macro.v(1072)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dia' in video.v(94)
+HDL-5007 WARNING: actual bit length 2 differs from formal bit length 3 for port 'dob' in video.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'rout' in mandel.v(95)
+HDL-5007 WARNING: actual bit length 1 differs from formal bit length 8 for port 'wx' in mandel.v(97)
+HDL-1007 : elaborate module TX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(1)
+HDL-1007 : elaborate module RX8 in C:/Users/akita/Documents/GitHub/MandelbrotTang/uart.v(40)
+HDL-1007 : elaborate module mult in mandel.v(242)
+HDL-1007 : elaborate module add in mandel.v(236)
+HDL-5007 WARNING: net 'wx' does not have a driver in mandel.v(97)
+HDL-5007 WARNING: net 'RXD' does not have a driver in mandel.v(100)
+HDL-5007 WARNING: input port 'we' remains unconnected for this instance in mandel.v(91)
+HDL-1200 : Current top model is main
+HDL-1100 : Inferred 0 RAMs.
+GUI-5004 WARNING: hsync has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_bout[0] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_gout[0] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[7] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[6] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[5] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[4] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[3] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[2] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[1] has not been assigned location ...
+GUI-5004 WARNING: lcd_rout[0] has not been assigned location ...
+GUI-5004 WARNING: rst_n has not been assigned location ...
+GUI-5004 WARNING: vsync has not been assigned location ...
+HDL-1007 : analyze verilog file al_ip/vram.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file al_ip/pll.v
+HDL-1007 : analyze verilog file video.v
+HDL-1007 : analyze verilog file uart.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-1007 : analyze verilog file mandel.v
+HDL-8007 ERROR: no definition for port 'lcd_pclk' in mandel.v(28)
+HDL-8007 ERROR: port 'lcd_pix' is not defined in mandel.v(34)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(240)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(246)
+HDL-8007 ERROR: ignore module module due to previous errors in mandel.v(262)
+HDL-1007 : Verilog file 'mandel.v' ignored due to errors
+HDL-1007 : analyze verilog file mandel.v

@@ -1,3 +1,5 @@
+`define DIV 208 // 24MHz / 208 = 115200bps
+
 module TX8(clk, rst, data, txd, start, busy);
     input clk, rst, start;
     input [7:0] data;
@@ -21,7 +23,7 @@ module TX8(clk, rst, data, txd, start, busy);
             end
             if (r_busy == 1) begin
                 cnt <= cnt + 1;
-                if (cnt == 25) begin // 24MHz / 26 = 923,077<-> 921,600bps
+                if (cnt == `DIV - 1) begin
                     cnt <= 0;
                     n_bit <= n_bit + 1;
                     tdata[9:0] <= {1'b0, tdata[9:1]};
@@ -77,10 +79,10 @@ module RX8(clk, rst, rxd, data, ready);
             end
             if (n_bit != 0) begin
                 cnt <= cnt + 1;
-                if (cnt == 5) rxdb0[0] <= rxd;
-                if (cnt == 12) rxdb0[1] <= rxd;
-                if (cnt == 19) rxdb0[2] <= rxd;
-                if (cnt == 25) begin // 24MHz / 26 = 923,077<-> 921,600bps
+                if (cnt == (`DIV/4)-1) rxdb0[0] <= rxd;
+                if (cnt == (`DIV/2)-1) rxdb0[1] <= rxd;
+                if (cnt == (`DIV*3/4)-1) rxdb0[2] <= rxd;
+                if (cnt == `DIV - 1) begin
                     cnt <= 0;
                     n_bit <= n_bit + 1;
                     rdata[9:0] <= {rxdb, rdata[9:1]};

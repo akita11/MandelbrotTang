@@ -3,16 +3,20 @@
 -- TITLE : VGA Sync Generator
 --
 --     DESIGN : S.OSAFUNE (J-7SYSTEM WORKS LIMITED)
+--            : Junichi Akita (akita@ifdl.jp, akita11)
 --     DATE   : 2010/12/10 -> 2010/12/27
 --
 --     UPDATE : 2012/02/21 add pixelena signal(for ATM0430D5)
 --            : 2013/07/29 add colorbar generator
 --            : 2018/05/13 delete dither
+--            : 2020/03/28 converted into VerilogHDL & video RAM configuration by akita11
+--              from https://github.com/osafune/tangnano_sample/blob/master/led_lampy/src/vga_syncgen.vhd
 --
 -- ===================================================================
 
 -- The MIT License (MIT)
 -- Copyright (c) 2010-2018 J-7SYSTEM WORKS LIMITED.
+-- Copyright (c) 2020 Junichi Akita
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of
 -- this software and associated documentation files (the "Software"), to deal in
@@ -40,64 +44,65 @@
 `define V_TOTAL		288
 `define V_SYNC		3
 `define V_BACKP		0
-`define V_ACTIVE	272
+//`define V_ACTIVE	272
+`define V_ACTIVE	255
   
 module video(
-    input 	  reset, // active high
-    input 	  video_clk, // typ 25.175MHz
-    input 	  scan_ena, // framebuff scan enable
-    output 	  framestart,
-    output 	  linestart,
-    output 	  pixelena, // pixel readout active
-    output 	  hsync,
-    output 	  vsync,
-    output 	  hblank,
-    output 	  vblank,
-    output 	  dotenable,
-    output [7:0] rout, 
-    output [7:0] gout,
-    output [7:0] bout,
-    input mem_clk,
-    input [7:0]  wx, // write pixel X
-    input [6:0]  wy, // write pixel Y
-    input [1:0]  wd, // write pixel data
-    input 	  we // write pixel enable
+    input 	        reset, // active high
+    input 	        video_clk, // pixel clock
+    input 	        scan_ena, // framebuff scan enable
+    output 	        framestart,
+    output 	        linestart,
+    output 	        pixelena, // pixel readout active
+    output 	        hsync,
+    output 	        vsync,
+    output 	        hblank,
+    output 	        vblank,
+    output 	        dotenable,
+    output  [7:0]   rout, 
+    output  [7:0]   gout,
+    output  [7:0]   bout,
+    input           mem_clk,
+    input [8:0]     wx, // write pixel X, 9bit, 0-511
+    input [7:0]     wy, // write pixel Y, 8bit, 0-255
+    input [2:0]     wd, // write pixel data
+    input 	        we // write pixel enable
 );
 
     reg [`H_TOTAL - 1:0] hcount;
     reg [`V_TOTAL - 1:0] vcount;
 
-    reg 			scan_in_reg;
-    reg 			scanena_reg;
-    reg 			frame_reg;
-    reg 			line_reg;
-    reg 			hsync_reg;
-    reg 			vsync_reg;
-    reg 			hblank_reg;
-    reg 			vblank_reg;
+    reg         scan_in_reg;
+    reg 		scanena_reg;
+    reg 		frame_reg;
+    reg 		line_reg;
+    reg 		hsync_reg;
+    reg 		vsync_reg;
+    reg 		hblank_reg;
+    reg 		vblank_reg;
 
-    reg [7:0] 		rout_reg;
-    reg [7:0] 		gout_reg;
-    reg [7:0] 		bout_reg;
+    reg [7:0] 	rout_reg;
+    reg [7:0] 	gout_reg;
+    reg [7:0] 	bout_reg;
 
-    wire [14:0] mem_ada, mem_adb; // PortA=write, PortB=read
-    wire [1:0] mem_dout, mem_din;
-    wire mem_cea, mem_ceb;
+    wire [16:0] mem_ada, mem_adb; // PortA=write, PortB=read
+    wire [2:0]  mem_dout, mem_din;
+    wire        mem_cea, mem_ceb;
 
     assign mem_ada = {wy, wx};
     assign mem_din = wd;
     assign mem_cea = we;
     assign mem_ceb = 1'b1;
 
-    assign mem_adb = {vcount, hcount}; // tentative
-//module vram ( dia, addra, cea, clka, dob, addrb, ceb, clkb);
+    assign mem_adb = {vcount, hcount};
+
+    //module vram ( dia, addra, cea, clka, dob, addrb, ceb, clkb);
 	vram vram(	mem_din, mem_ada, mem_cea, mem_clk, 
 				mem_dout, mem_adb, video_clk, video_clk);
-// mem(mem_dout, video_clk, mem_cea, reset, mem_clk, mem_ceb, reset, 1'b1, mem_ada, mem_din, mem_adb);
 
-    //  ビデオ同期信号生� 
-    assign framestart = frame_reg;	// 忁�レジスタ出�
-    assign linestart  = line_reg;		// 忁�レジスタ出�
+    // video sync signals
+    assign framestart = frame_reg;  // register output
+    assign linestart  = line_reg;	// register output
     assign pixelena   = (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(scanena_reg):1'b0;
 
     assign hsync  = hsync_reg;
@@ -148,20 +153,23 @@ module video(
                 frame_reg <= 1'b0;
                 line_reg  <= 1'b0;
             end
-        end // else: !if(reset = 1'b1)
-
-    end // always @ (posedge video_clk)
+        end
+    end
 
     always @(mem_dout) begin
         case (mem_dout)
-            2'b00 : begin rout_reg <= 8'h00; gout_reg <= 8'h00; bout_reg <= 8'h00; end
-            2'b01 : begin rout_reg <= 8'hff; gout_reg <= 8'h00; bout_reg <= 8'h00; end
-            2'b10 : begin rout_reg <= 8'h00; gout_reg <= 8'hff; bout_reg <= 8'h00; end
-            2'b11 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'hff; end
+            3'b000 : begin rout_reg <= 8'h00; gout_reg <= 8'h00; bout_reg <= 8'h00; end
+            3'b001 : begin rout_reg <= 8'hff; gout_reg <= 8'h00; bout_reg <= 8'h00; end
+            3'b010 : begin rout_reg <= 8'h00; gout_reg <= 8'h00; bout_reg <= 8'hff; end
+            3'b011 : begin rout_reg <= 8'hff; gout_reg <= 8'h00; bout_reg <= 8'hff; end
+            3'b100 : begin rout_reg <= 8'h00; gout_reg <= 8'hff; bout_reg <= 8'h00; end
+            3'b101 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'h00; end
+            3'b110 : begin rout_reg <= 8'h00; gout_reg <= 8'hff; bout_reg <= 8'hff; end
+            3'b111 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'hff; end
         endcase
     end
 
-    // 画�信号生� 
+    // pixel signals
     assign rout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(rout_reg):0;
     assign gout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(gout_reg):0;
     assign bout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(bout_reg):0;

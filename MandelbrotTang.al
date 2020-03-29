@@ -2,7 +2,7 @@
 <Project>
     <Project_Created_Time>2020-03-24 09:43:51</Project_Created_Time>
     <TD_Version>4.6.14756</TD_Version>
-    <UCode>10000100</UCode>
+    <UCode>00000000</UCode>
     <Name>MandelbrotTang</Name>
     <HardWare>
         <Family>EG4</Family>
@@ -26,8 +26,8 @@
         <CREATEINDEX>user</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2020-03-24 15:10:41</Step_Last_Change>
-        <Current_Step>0</Current_Step>
+        <Step_Last_Change>2020-03-29 17:04:36</Step_Last_Change>
+        <Current_Step>10</Current_Step>
         <Step_Status>true</Step_Status>
     </Project_Settings>
 </Project>

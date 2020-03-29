@@ -10,7 +10,6 @@
 `define N_PIX_X 192
 `define N_PIX_Y 128
 
-
 // for Q12 format
 `define BIT_INT 4
 `define BIT_FRAC 12
@@ -26,27 +25,29 @@
 
 module main(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
-			TXD, RXD,
+//			TXD,
+			RXD,
 			led_r_b, led_g_b, led_b_b
 			);
    
 	input clk24M, rst_n;
    	output lcd_pclk, lcd_de, lcd_vsync, lcd_hsync;
    	output [7:0] lcd_rout, lcd_gout, lcd_bout;
-   	output TXD;
+//   	output TXD;
    	input RXD;
    	output led_r_b, led_g_b, led_b_b;
+	
 	// z(n+1) <= z(n)^2 + C, z0=0
 
   	// parallel multipluer
   	// https://veri.wiki.fc2.com/wiki/%E7%AC%A6%E5%8F%B7%E4%BB%98%E4%B9%97%E7%AE%97%E5%99%A8
 
-   	wire	clk, vclk;
-   	wire 	rst;
+   	wire			clk, vclk;
+   	wire 			rst;
    
-   	reg 	fIterating;
-   	reg 	fResult; // 0 = diversed, 1 = iteration max reached
-   	reg 	fFinish;
+   	reg 			fIterating;
+   	reg 			fResult; // 0 = diversed, 1 = iteration max reached
+   	reg 			fFinish;
    	reg [3:0] st;
    	reg [7:0] i;
    	reg [8:0] px, py;
@@ -56,19 +57,21 @@ module main(clk24M, rst_n,
     reg 		       f_operating;
     reg [`N_BIT - 1:0]  r_cxs, r_cys, r_dcx, r_dcy;
     reg [7:0] 	       r_pix_x, r_pix_y;
-    reg [7:0] 	       t_data;
+//    reg [7:0] 	       t_data;
     wire [7:0] 	       r_data;
-    reg 		       t_start;
-    wire 	       t_busy, r_ready;
+//    reg 		       t_start;
+//    wire 	       t_busy, r_ready;
     reg [1:0] 	       f_receiving; 		       
     reg [4:0] 	       n_byte;
-
    	reg [15:0] max_iterate;
+
+	reg [2:0] r_wd;
+	reg r_we;
 
 //module pll(refclk, reset, extlock, clk0_out);
 	assign rst = ~rst_n;
 	assign clk = clk24M;
-	pll pll(clk, rst, pll_lock, vclk);
+	pll pll(clk, rst, pll_lock, vclk); // vclk=9MHz
 /*
 module video(
     input 	  reset, // active high
@@ -86,9 +89,9 @@ module video(
     output [7:0] gout,
     output [7:0] bout,
     input mem_clk,
-    input [7:0]  wx, // write pixel X
-    input [6:0]  wy, // write pixel Y
-    input [1:0]  wd, // write pixel data
+    input [8:0]  wx, // write pixel X
+    input [7:0]  wy, // write pixel Y
+    input [2:0]  wd, // write pixel data
     input 	  we // write pixel enable
 );
 */
@@ -98,11 +101,17 @@ module video(
 				hblank, vblank, dotenable,
 				rout, gout, bout,
 				clk,
-				wx, wy, wd);
+				wx, wy, wd, we);
+
+	assign wx = px;
+	assign wy = py;
+	assign wd = r_wd;
+	assign we = r_we;
+
 	assign lcd_pclk = vclk;
 	assign lcd_de = pixelena;
 
-    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
+//    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
     RX8 rx8(clk, rst, RXD, r_data, r_ready);
 
   	mult m0(ma, mb, mp);  
@@ -138,22 +147,24 @@ module video(
 
         if (f_operating == 1) begin
             if (fIterating == 0) begin
-                t_data <= i; t_start <= 1;
+				if (i == max_iterate) r_wd <= 0; // non-diversed, black
+            	else r_wd <= (i%7) + 1; // diversed
+            	r_we <= 1;
             end
             else begin
-                t_start <= 0;
+				r_we <= 0;
             end
         end
         else begin
-            t_start <= 0;
+			r_we <= 0;
         end
 
     	if (rst == 1) begin
             px <= 0; py <= 0; // pixel coordinates
             x <= 0; y <= 0;
             i <= 0; fIterating <= 0; st <= 0; fResult <= 0; fFinish <= 1;
-            t_start <= 0;
-            t_data <= 0;
+			r_we <= 0;
+
             f_receiving <= 0;
             f_operating <= 0;
             n_byte <= 0;

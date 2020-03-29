@@ -1,5 +1,5 @@
 // Verilog netlist created by TD v4.6.14756
-// Tue Mar 24 14:27:53 2020
+// Sat Mar 28 16:56:16 2020
 
 `timescale 1ns / 1ps
 module pll  // al_ip/pll.v(22)
@@ -23,8 +23,8 @@ module pll  // al_ip/pll.v(22)
     .PROGRAMN_PERSISTN("DISABLE"))
     config_inst ();
   EG_PHY_PLL #(
-    .CLKC0_CPHASE(40),
-    .CLKC0_DIV(41),
+    .CLKC0_CPHASE(111),
+    .CLKC0_DIV(112),
     .CLKC0_DIV2_ENABLE("DISABLE"),
     .CLKC0_ENABLE("ENABLE"),
     .CLKC0_FPHASE(0),
@@ -51,7 +51,7 @@ module pll  // al_ip/pll.v(22)
     .DERIVE_PLL_CLOCKS("DISABLE"),
     .DPHASE_SOURCE("DISABLE"),
     .DYNCFG("DISABLE"),
-    .FBCLK_DIV(43),
+    .FBCLK_DIV(42),
     .FEEDBK_MODE("NOCOMP"),
     .FEEDBK_PATH("VCO_PHASE_0"),
     .FIN("24.000"),

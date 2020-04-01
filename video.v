@@ -157,6 +157,7 @@ module video(
             end
         end
     end
+/*
     always @(mem_dout) begin
         case (mem_dout)
             3'b000 : begin rout_reg <= 8'h00; gout_reg <= 8'h00; bout_reg <= 8'h00; end
@@ -169,14 +170,15 @@ module video(
             3'b111 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'hff; end
         endcase
     end
-/*	
+*/
+	always @(hcount) begin
+		if (hcount[4] == 0) rout_reg <= 0; else rout_reg <= 255;
+		if (hcount[5] == 0) gout_reg <= 0; else gout_reg <= 255;
+		if (hcount[6] == 0) bout_reg <= 0; else bout_reg <= 255;
+	end
     // pixel signals
     assign rout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(rout_reg):0;
     assign gout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(gout_reg):0;
     assign bout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(bout_reg):0;
-*/
-    assign rout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(255):0;
-    assign gout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(0):0;
-    assign bout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(0):0;
 endmodule // video
 

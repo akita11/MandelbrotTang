@@ -1,21 +1,24 @@
 # Blink for Tang Primer
 
-Tang Primer��L�`�J
+Tang PrimerでLチカ
 
-## �p�ӂ������
+## 用意するもの
 
-�E [Tang Primer](https://www.switch-science.com/catalog/5703/)
+・ [Tang Primer](https://www.switch-science.com/catalog/5703/)
 
-## �菇
+## 手順
 
-1. ���̎菇�ɂ����āAIDE��Tang Dynasty���_�E�����[�h���āA�C���X�g�[���i�h���C�o���j
+1. この手順にそって、IDEのTang Dynastyをダウンロードして、インストール（ドライバも）
 https://tang.sipeed.com/en/using-tang/
 
-2. �����̃v���W�F�N�g�t�@�C���ꎮ���ǂ����ɒu���ATang Dynasty�ŁAProject��Open Project�Ńv���W�F�N�g���J��
+※Windowsでドライバ署名にひっかかる（デバイスマネージャで"!"マークがついている）場合は、他の場合と同様の手順でドライバ署名のチェックをはずしてドライバをいれる。
 
-3. Process��Run (�܂��͗΂̍Đ��{�^���j�Ř_�������E�z�u�z��
 
-4. Tools��Download�ŏ������ނƁA��LED��1Hz�œ_�ł���
+2. ここのプロジェクトファイル一式をどこかに置き、Tang Dynastyで、Project→Open Projectでプロジェクトを開く
+
+3. Process→Run (または緑の再生ボタン）で論理合成・配置配線
+
+4. Tools→Downloadで書き込むと、赤LEDが1Hzで点滅する
 
 ## Author
 

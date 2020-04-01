@@ -1,12 +1,18 @@
 set_pin_assignment	{ clk24M }	{ LOCATION = K14; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ rst_n }	{ LOCATION = K16; IOSTANDARD = LVCMOS33; }
 
+set_pin_assignment	{ test[0] }	{ LOCATION = P2; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ test[1] }	{ LOCATION = R2; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ test[2] }	{ LOCATION = N5; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ test[3] }	{ LOCATION = P5; IOSTANDARD = LVCMOS33; }
+
 set_pin_assignment	{ RXD }	{ LOCATION = M12; IOSTANDARD = LVCMOS33; }
 #set_pin_assignment	{ TXD }	{ LOCATION = R16; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_r_b }	{ LOCATION = R3; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_g_b }	{ LOCATION = J14; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_b_b }	{ LOCATION = P13; IOSTANDARD = LVCMOS33; }
 
+set_pin_assignment	{ lcd_pwm }	{ LOCATION = J16; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_pclk }	{ LOCATION = L1; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_de }	{ LOCATION = L4; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ lcd_vsync }	{ LOCATION = R1; IOSTANDARD = LVCMOS33; }

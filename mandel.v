@@ -24,18 +24,20 @@
 `define DCY    `N_BIT'b0000_000001000000          // 1/64
 
 module main(clk24M, rst_n,
-			lcd_pclk, lcd_de, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
+			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
 //			TXD,
 			RXD,
-			led_r_b, led_g_b, led_b_b
+			led_r_b, led_g_b, led_b_b,
+			test
 			);
    
 	input clk24M, rst_n;
-   	output lcd_pclk, lcd_de, lcd_vsync, lcd_hsync;
+   	output lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync;
    	output [7:0] lcd_rout, lcd_gout, lcd_bout;
 //   	output TXD;
    	input RXD;
    	output led_r_b, led_g_b, led_b_b;
+   	output [3:0] test;
 	
 	// z(n+1) <= z(n)^2 + C, z0=0
 
@@ -67,11 +69,17 @@ module main(clk24M, rst_n,
 
 	reg [2:0] r_wd;
 	reg r_we;
+	wire [7:0] rout, gout, bout;
+	assign lcd_rout = rout, lcd_gout = gout, lcd_bout = bout;
 
 //module pll(refclk, reset, extlock, clk0_out);
 	assign rst = ~rst_n;
 	assign clk = clk24M;
 	pll pll(clk, rst, pll_lock, vclk); // vclk=9MHz
+	assign test[0] = lcd_rout[0];
+	assign test[1] = lcd_hsync;
+	assign test[2] = lcd_pclk;
+	assign test[3] = lcd_de;
 /*
 module video(
     input 	  reset, // active high
@@ -110,6 +118,8 @@ module video(
 
 	assign lcd_pclk = vclk;
 	assign lcd_de = pixelena;
+	assign lcd_hsync = hsync, lcd_vsync = lcd_vsync;
+	assign lcd_pwm = 1'b1;
 
 //    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
     RX8 rx8(clk, rst, RXD, r_data, r_ready);

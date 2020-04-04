@@ -47,8 +47,6 @@
 //`define V_ACTIVE	272
 `define V_ACTIVE	255
 
-
-  
 module video(
     input 	        reset, // active high
     input 	        video_clk, // pixel clock
@@ -73,6 +71,8 @@ module video(
 
     reg [`H_TOTAL - 1:0] hcount;
     reg [`V_TOTAL - 1:0] vcount;
+    reg [8:0] posx;
+    reg [7:0] posy;
 
     reg         scan_in_reg;
     reg 		scanena_reg;
@@ -96,11 +96,11 @@ module video(
     assign mem_cea = we;
     assign mem_ceb = 1'b1;
 
-    assign mem_adb = {vcount, hcount};
+    assign mem_adb = {posy, posx};
 
     //module vram ( dia, addra, cea, clka, dob, addrb, ceb, clkb);
 	vram vram(	mem_din, mem_ada, mem_cea, mem_clk, 
-				mem_dout, mem_adb, video_clk, video_clk);
+				mem_dout, mem_adb, mem_ceb, video_clk);
 
     // video sync signals
     assign framestart = frame_reg;  // register output
@@ -118,6 +118,7 @@ module video(
             hcount <= `H_TOTAL - 1; vcount <= `V_TOTAL - 1;
             scan_in_reg <= 1'b0; scanena_reg <= 1'b0; frame_reg <= 1'b0; line_reg <= 1'b0;
             hsync_reg   <= 1'b0; vsync_reg   <= 1'b0; hblank_reg  <= 1'b1; vblank_reg  <= 1'b1;
+            posx <= 0; posy <= 0;
         end
         else begin
             scan_in_reg <= scan_ena;
@@ -130,17 +131,22 @@ module video(
 
             if (hcount == `H_TOTAL - 1) hsync_reg <= 1'b1;
             else if (hcount == `H_SYNC - 1) hsync_reg <= 1'b0;
-	 
+            if (hsync_reg == 0) posx <= posx + 1; else posx <= 0;
+
             if (hcount == `H_SYNC + `H_BACKP - 1) hblank_reg <= 1'b0;
             else if (hcount == `H_SYNC + `H_BACKP + `H_ACTIVE - 1)  hblank_reg <= 1'b1;
 
             if (hcount == `H_SYNC + `H_BACKP + `H_ACTIVE - 1) begin
                 if (vcount == `V_TOTAL - 1) vcount <= 0;
-                else vcount <= vcount + 1;
+                else begin
+                    vcount <= vcount + 1;
+                    if (vsync_reg == 0) posy <= posy + 1; else posy <= 0;
+                end
             end
 
             if (vcount == `V_TOTAL - 1) vsync_reg <= 1'b1;
             else if (vcount == `V_SYNC - 1) vsync_reg <= 1'b0;
+ 
 
             if (vcount == `V_SYNC + `V_BACKP - 1) vblank_reg <= 1'b0;
             else if(vcount == `V_SYNC + `V_BACKP + `V_ACTIVE - 1) vblank_reg <= 1'b1;
@@ -157,7 +163,7 @@ module video(
             end
         end
     end
-/*
+
     always @(mem_dout) begin
         case (mem_dout)
             3'b000 : begin rout_reg <= 8'h00; gout_reg <= 8'h00; bout_reg <= 8'h00; end
@@ -168,14 +174,16 @@ module video(
             3'b101 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'h00; end
             3'b110 : begin rout_reg <= 8'h00; gout_reg <= 8'hff; bout_reg <= 8'hff; end
             3'b111 : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'hff; end
+            default : begin rout_reg <= 8'hff; gout_reg <= 8'hff; bout_reg <= 8'hff; end
         endcase
     end
-*/
+/*
 	always @(hcount) begin
 		if (hcount[4] == 0) rout_reg <= 0; else rout_reg <= 255;
 		if (hcount[5] == 0) gout_reg <= 0; else gout_reg <= 255;
 		if (hcount[6] == 0) bout_reg <= 0; else bout_reg <= 255;
 	end
+*/
     // pixel signals
     assign rout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(rout_reg):0;
     assign gout =  (hblank_reg == 1'b0 && vblank_reg == 1'b0)?(gout_reg):0;

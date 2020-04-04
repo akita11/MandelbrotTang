@@ -23,7 +23,7 @@
 `define DCX    `N_BIT'b0000_000001000000          // 1/64
 `define DCY    `N_BIT'b0000_000001000000          // 1/64
 
-module main(clk24M, rst_n,
+module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
 //			TXD,
 			RXD,
@@ -70,6 +70,11 @@ module main(clk24M, rst_n,
 	reg [2:0] r_wd;
 	reg r_we;
 	wire [7:0] rout, gout, bout;
+	wire [8:0] wx;
+	wire [7:0] wy;
+	wire [2:0] wd;
+	wire we;
+
 	assign lcd_rout = rout, lcd_gout = gout, lcd_bout = bout;
 
 //module pll(refclk, reset, extlock, clk0_out);
@@ -185,6 +190,7 @@ module video(
 	 		max_iterate <= 100;
       	end
       	else begin
+/*
 	 	// xx = x * x - y * y + cx
 	 	// yy = 2 * x * y + cy
 
@@ -256,6 +262,18 @@ module video(
 	       			end
 	    		end
 	 		end
+*/
+			// for color bar generation test
+			r_we <= 1;
+			r_wd <= {py[6:5], px[5]};
+			px <= px + 1;
+			if (px == 511) begin
+				px <= 0;
+				py <= py + 1;
+				if (py == 255) begin
+					py <= 0;
+				end
+			end
       	end
    	end 
 endmodule

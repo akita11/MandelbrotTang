@@ -2,7 +2,7 @@
 <Project>
     <Project_Created_Time>2020-03-24 09:43:51</Project_Created_Time>
     <TD_Version>4.6.14756</TD_Version>
-    <UCode>00000000</UCode>
+    <UCode>11001100</UCode>
     <Name>MandelbrotTang</Name>
     <HardWare>
         <Family>EG4</Family>
@@ -22,11 +22,11 @@
     </Source_Files>
     <TOP_MODULE>
         <LABEL/>
-        <MODULE>main</MODULE>
+        <MODULE>MandelbrotTang</MODULE>
         <CREATEINDEX>user</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2020-04-02 08:21:45</Step_Last_Change>
+        <Step_Last_Change>2020-04-04 16:39:30</Step_Last_Change>
         <Current_Step>60</Current_Step>
         <Step_Status>true</Step_Status>
     </Project_Settings>

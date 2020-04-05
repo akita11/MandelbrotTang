@@ -4,7 +4,7 @@ module TX8(clk, rst, data, txd, start, busy);
     input clk, rst, start;
     input [7:0] data;
     output      txd, busy;
-    reg [4:0]   cnt;
+    reg [7:0]   cnt; // note: adjust bit width for DIV
     reg [3:0]   n_bit;
     reg 	       r_busy;
     reg [9:0]   tdata;
@@ -43,7 +43,7 @@ module RX8(clk, rst, rxd, data, ready);
     input clk, rst, rxd;
     output [7:0] data;
     output 	ready;
-    reg [4:0]   cnt;
+    reg [7:0]   cnt; // note: adjust bit width for DIV
     reg [3:0]   n_bit;
     reg [9:0]   rdata;
     reg [2:0]   rxdb0; // @bit=5, 12, 19
@@ -83,6 +83,12 @@ module RX8(clk, rst, rxd, data, ready);
                 if (cnt == (`DIV/2)-1) rxdb0[1] <= rxd;
                 if (cnt == (`DIV*3/4)-1) rxdb0[2] <= rxd;
                 if (cnt == `DIV - 1) begin
+/*
+                if (cnt == 52 - 1) rxdb0[0] <= rxd;
+                if (cnt == 104 - 1) rxdb0[1] <= rxd;
+                if (cnt == 156 - 1) rxdb0[2] <= rxd;
+                if (cnt == 208 - 1) begin
+*/
                     cnt <= 0;
                     n_bit <= n_bit + 1;
                     rdata[9:0] <= {rxdb, rdata[9:1]};

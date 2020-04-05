@@ -1,2 +1,2 @@
-iverilog video.v video_tb.v
+iverilog uart.v uart_tb.v
 vvp a.out

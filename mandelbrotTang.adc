@@ -6,8 +6,13 @@ set_pin_assignment	{ test[1] }	{ LOCATION = R2; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ test[2] }	{ LOCATION = N5; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ test[3] }	{ LOCATION = P5; IOSTANDARD = LVCMOS33; }
 
-set_pin_assignment	{ RXD }	{ LOCATION = M12; IOSTANDARD = LVCMOS33; }
-#set_pin_assignment	{ TXD }	{ LOCATION = R16; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ _DTR }	{ LOCATION = A4; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ TXD }	{ LOCATION = A3; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ RXD }	{ LOCATION = C5; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ _VDD }	{ LOCATION = B6; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ _CTS }	{ LOCATION = C9; IOSTANDARD = LVCMOS33; }
+set_pin_assignment	{ _GND }	{ LOCATION = B10; IOSTANDARD = LVCMOS33; }
+
 set_pin_assignment	{ led_r_b }	{ LOCATION = R3; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_g_b }	{ LOCATION = J14; IOSTANDARD = LVCMOS33; }
 set_pin_assignment	{ led_b_b }	{ LOCATION = P13; IOSTANDARD = LVCMOS33; }

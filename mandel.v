@@ -5,18 +5,6 @@
 `define ONE `N_BIT'b0000_000000000001
 `define TH  `N_BIT'b0100_000000000000 // 4.0
 
-/*
-`define N_PIX_X 510
-`define N_PIX_Y 255
-
-`define CXS (~(`N_BIT'b0010_000000000000) + `ONE) // -2.0
-//`define CXE    `N_BIT'b0001_000000000000          // +1.0
-`define CYS (~(`N_BIT'b0001_000100000000) + `ONE) // -1.0625
-//`define CYE    `N_BIT'b0001_000100000000          // +1.0625
-`define DCX    `N_BIT'b0000_000000100000          // 1/128
-`define DCY    `N_BIT'b0000_000000100000          // 1/128
-*/
-
 //`define N_PIX_X 192
 //`define N_PIX_Y 128
 `define N_PIX_X 510
@@ -32,19 +20,21 @@
 
 module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
-//			TXD,
+			TXD,
 			RXD,
+			_DTR, _CTS, _GND, _VDD,
 			led_r_b, led_g_b, led_b_b,
 			test
 			);
-   
 	input clk24M, rst_n;
    	output lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync;
    	output [7:0] lcd_rout, lcd_gout, lcd_bout;
-//   	output TXD;
+   	output TXD;
    	input RXD;
    	output led_r_b, led_g_b, led_b_b;
    	output [3:0] test;
+	input _DTR, _VDD;
+	output _CTS, _GND;
 	
 	// z(n+1) <= z(n)^2 + C, z0=0
 
@@ -65,7 +55,8 @@ module MandelbrotTang(clk24M, rst_n,
 
     reg 		       f_operating;
     reg [`N_BIT - 1:0]  r_cxs, r_cys, r_dcx, r_dcy;
-    reg [7:0] 	       r_pix_x, r_pix_y;
+    reg [8:0] 	    r_pix_x;
+	reg [7:0] 		r_pix_y;
 //    reg [7:0] 	       t_data;
     wire [7:0] 	       r_data;
 //    reg 		       t_start;
@@ -82,13 +73,16 @@ module MandelbrotTang(clk24M, rst_n,
 	wire [2:0] wd;
 	wire we;
 
+	// for FTDI Basic
+	assign _CTS = 0, _GND = 0;
+	assign TXD = 1;
+	
 	assign lcd_rout = rout, lcd_gout = gout, lcd_bout = bout;
-
-//module pll(refclk, reset, extlock, clk0_out);
 	assign rst = ~rst_n;
 
 //	assign clk = clk24M;
 	pll_main pll_main(clk24M, rst, pll_lock_main, clk); // clk=70MHz
+
 	pll pll_video(clk24M, rst, pll_lock, vclk); // vclk=9MHz
 	assign test[0] = lcd_rout[0];
 	assign test[1] = lcd_hsync;
@@ -135,11 +129,16 @@ module video(
 	assign lcd_hsync = hsync, lcd_vsync = vsync;
 	assign lcd_pwm = 1'b1;
 
-//    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
-    RX8 rx8(clk, rst, RXD, r_data, r_ready);
+//    TX8 tx8(clk24M, rst, t_data, TXD, t_start, t_busy);
+    RX8 rx8(clk24M, rst, RXD, r_data, r_ready);
+
+	assign led_r_b = ~n_byte[0];
+	assign led_g_b = r_ready;
+	assign led_b_b = 1;
 
   	mult m0(ma, mb, mp);  
    	add  a0(sa, sb, ss);
+
    	always @(posedge clk) begin
         if (f_receiving == 0 && r_ready == 1) begin
             f_receiving <= 1;
@@ -147,18 +146,21 @@ module video(
         if (f_receiving == 1) begin
             f_receiving <= 2;
             n_byte <= n_byte + 1;
-            if (n_byte == 0) r_pix_x <= r_data;
-            if (n_byte == 1) r_pix_y <= r_data;
-            if (n_byte == 2) r_cxs[15:8] <= r_data;
-            if (n_byte == 3) r_cxs[7:0] <= r_data;
-            if (n_byte == 4) r_cys[15:8] <= r_data;
-            if (n_byte == 5) r_cys[7:0] <= r_data;
-            if (n_byte == 6) r_dcx[15:8] <= r_data;
-            if (n_byte == 7) r_dcx[7:0] <= r_data;
-            if (n_byte == 8) r_dcy[15:8] <= r_data;
-            if (n_byte == 9) r_dcy[7:0] <= r_data;
-            if (n_byte == 9) begin
+            if (n_byte == 0) r_pix_x[8] <= r_data[0];
+            if (n_byte == 1) r_pix_x[7:0] <= r_data;
+            if (n_byte == 2) r_pix_y <= r_data;
+            if (n_byte == 3) r_cxs[15:8] <= r_data;
+            if (n_byte == 4) r_cxs[7:0] <= r_data;
+            if (n_byte == 5) r_cys[15:8] <= r_data;
+            if (n_byte == 6) r_cys[7:0] <= r_data;
+            if (n_byte == 7) r_dcx[15:8] <= r_data;
+            if (n_byte == 8) r_dcx[7:0] <= r_data;
+            if (n_byte == 9) r_dcy[15:8] <= r_data;
+            if (n_byte == 10) r_dcy[7:0] <= r_data;
+            if (n_byte == 11) max_iterate <= r_data;
+            if (n_byte == 11) begin
                 cx <= r_cxs; cy <= r_cys;
+				px <= 0; py <= 0;
                 fFinish <= 0;
                 f_operating <= 1;
                 fIterating <= 1;
@@ -187,21 +189,21 @@ module video(
             px <= 0; py <= 0; // pixel coordinates
             x <= 0; y <= 0;
             i <= 0;
-//			fIterating <= 0;
+			fIterating <= 0;
 			st <= 0; fResult <= 0; fFinish <= 1;
 			r_we <= 0;
             f_receiving <= 0;
-//            f_operating <= 0;
+            f_operating <= 0;
             n_byte <= 0;
-//            cx <= 0; cy <= 0;
-    		cx <= `CXS; cy <= `CYS;
+            cx <= 0; cy <= 0;
+//  		cx <= `CXS; cy <= `CYS;
             r_cxs <= 0; r_cys <= 0;
             r_dcx <= 0; r_dcy <= 0;
-            r_pix_x <= 0; r_pix_y <= 0;
+            r_pix_x <= `N_PIX_X; r_pix_y <= `N_PIX_Y;
 	 		max_iterate <= 100;
 
-            f_operating <= 1;
-            fIterating <= 1;
+//            f_operating <= 1;
+//            fIterating <= 1;
 
       	end
       	else begin
@@ -258,15 +260,15 @@ module video(
 
 	    		// pixel coornidate update
 	    		py <= py + 1;
-	    		cy <= cy + `DCY;
-	    		if (py == `N_PIX_Y) begin
+	    		cy <= cy + r_dcy;
+	    		if (py == r_pix_y) begin
 	       			py <= 0;
 	       			px <= px + 1;
-	       			cy <= `CYS;
-	       			cx <= cx + `DCX;
-	       			if (px == `N_PIX_X) begin
+	       			cy <= r_cys;
+	       			cx <= cx + r_dcx;
+	       			if (px == r_pix_x) begin
 		  				px <= 0;
-		  				cx <= `CXS;
+		  				cx <= r_cxs;
 		  				fFinish <= 1;
 		  				f_operating <= 0;
 		  				fIterating <= 0;

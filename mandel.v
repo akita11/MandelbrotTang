@@ -1,27 +1,34 @@
-//`define N_PIX_X 384 // 480 - 96 = 384
-//`define N_PIX_Y 272
-//`define XS (~(`N_BIT'b0010_0000000000000000) + `ONE) // -2.0
-//`define XE    `N_BIT'b0001_0000000000000000          // +1.0
-//`define YS (~(`N_BIT'b0001_0001000000000000) + `ONE) // -1.0625
-//`define YE    `N_BIT'b0001_0001000000000000          // +1.0625
-//`define DX    `N_BIT'b0000_0000001000000000          // 1/128
-//`define DY    `N_BIT'b0000_0000001000000000          // 1/128
-
-`define N_PIX_X 192
-`define N_PIX_Y 128
-
 // for Q12 format
 `define BIT_INT 4
 `define BIT_FRAC 12
 `define N_BIT 16
 `define ONE `N_BIT'b0000_000000000001
 `define TH  `N_BIT'b0100_000000000000 // 4.0
+
+/*
+`define N_PIX_X 510
+`define N_PIX_Y 255
+
 `define CXS (~(`N_BIT'b0010_000000000000) + `ONE) // -2.0
-`define CXE    `N_BIT'b0001_000000000000          // +1.0
+//`define CXE    `N_BIT'b0001_000000000000          // +1.0
+`define CYS (~(`N_BIT'b0001_000100000000) + `ONE) // -1.0625
+//`define CYE    `N_BIT'b0001_000100000000          // +1.0625
+`define DCX    `N_BIT'b0000_000000100000          // 1/128
+`define DCY    `N_BIT'b0000_000000100000          // 1/128
+*/
+
+//`define N_PIX_X 192
+//`define N_PIX_Y 128
+`define N_PIX_X 510
+`define N_PIX_Y 255
+`define CXS (~(`N_BIT'b0010_000000000000) + `ONE) // -2.0
+//`define CXE    `N_BIT'b0001_000000000000          // +1.0
 `define CYS (~(`N_BIT'b0001_000000000000) + `ONE) // -1.0
-`define CYE    `N_BIT'b0001_000000000000          // +1.0
-`define DCX    `N_BIT'b0000_000001000000          // 1/64
-`define DCY    `N_BIT'b0000_000001000000          // 1/64
+//`define CYE    `N_BIT'b0001_000000000000          // +1.0
+`define DCX    `N_BIT'b0000_000000100000          // 1/64
+`define DCY    `N_BIT'b0000_000000100000          // 1/64
+
+
 
 module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
@@ -79,8 +86,10 @@ module MandelbrotTang(clk24M, rst_n,
 
 //module pll(refclk, reset, extlock, clk0_out);
 	assign rst = ~rst_n;
-	assign clk = clk24M;
-	pll pll(clk, rst, pll_lock, vclk); // vclk=9MHz
+
+//	assign clk = clk24M;
+	pll_main pll_main(clk24M, rst, pll_lock_main, clk); // clk=70MHz
+	pll pll_video(clk24M, rst, pll_lock, vclk); // vclk=9MHz
 	assign test[0] = lcd_rout[0];
 	assign test[1] = lcd_hsync;
 	assign test[2] = lcd_pclk;
@@ -123,7 +132,7 @@ module video(
 
 	assign lcd_pclk = vclk;
 	assign lcd_de = pixelena;
-	assign lcd_hsync = hsync, lcd_vsync = lcd_vsync;
+	assign lcd_hsync = hsync, lcd_vsync = vsync;
 	assign lcd_pwm = 1'b1;
 
 //    TX8 tx8(clk, rst, t_data, TXD, t_start, t_busy);
@@ -177,20 +186,25 @@ module video(
     	if (rst == 1) begin
             px <= 0; py <= 0; // pixel coordinates
             x <= 0; y <= 0;
-            i <= 0; fIterating <= 0; st <= 0; fResult <= 0; fFinish <= 1;
+            i <= 0;
+//			fIterating <= 0;
+			st <= 0; fResult <= 0; fFinish <= 1;
 			r_we <= 0;
-
             f_receiving <= 0;
-            f_operating <= 0;
+//            f_operating <= 0;
             n_byte <= 0;
-            cx <= 0; cy <= 0;
+//            cx <= 0; cy <= 0;
+    		cx <= `CXS; cy <= `CYS;
             r_cxs <= 0; r_cys <= 0;
             r_dcx <= 0; r_dcy <= 0;
             r_pix_x <= 0; r_pix_y <= 0;
 	 		max_iterate <= 100;
+
+            f_operating <= 1;
+            fIterating <= 1;
+
       	end
       	else begin
-/*
 	 	// xx = x * x - y * y + cx
 	 	// yy = 2 * x * y + cy
 
@@ -241,31 +255,28 @@ module video(
 	    		// draw pixel
 	    		// - fResult = 0 -> color=1 - 7 (outside Mandelbrot set), i[1:0]
 	    		// - fResult = 1 -> black (in Mandelbrot set)
-	    		// cx&cy update
-	    		cy <= cy + `DCY;
-	    		if (cy == `CYE) begin
-	       			cy <= `CYS;
-	       			cx <= cx + `DCX;
-	       			if (cx == `CXE) begin
-		  				fFinish <= 1;
-		  				cx <= `CXS;
-	       			end
-	    		end
-	    
+
 	    		// pixel coornidate update
 	    		py <= py + 1;
+	    		cy <= cy + `DCY;
 	    		if (py == `N_PIX_Y) begin
 	       			py <= 0;
 	       			px <= px + 1;
+	       			cy <= `CYS;
+	       			cx <= cx + `DCX;
 	       			if (px == `N_PIX_X) begin
 		  				px <= 0;
+		  				cx <= `CXS;
+		  				fFinish <= 1;
+		  				f_operating <= 0;
+		  				fIterating <= 0;
 	       			end
 	    		end
 	 		end
-*/
+/*
 			// for color bar generation test
 			r_we <= 1;
-			r_wd <= {py[6:5], px[5]};
+			r_wd <= {~px[2:0]};
 			px <= px + 1;
 			if (px == 511) begin
 				px <= 0;
@@ -274,6 +285,7 @@ module video(
 					py <= 0;
 				end
 			end
+*/
       	end
    	end 
 endmodule

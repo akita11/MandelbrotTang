@@ -15,9 +15,10 @@
             <File>al_ip/pll.v</File>
             <File>video.v</File>
             <File>uart.v</File>
+            <File>al_ip/pll_main.v</File>
         </Verilog>
         <ADC_FILE>mandelbrotTang.adc</ADC_FILE>
-        <SDC_FILE/>
+        <SDC_FILE>MandelbrotTang.sdc</SDC_FILE>
         <CWC_FILE/>
     </Source_Files>
     <TOP_MODULE>
@@ -26,7 +27,7 @@
         <CREATEINDEX>user</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2020-04-04 16:39:30</Step_Last_Change>
+        <Step_Last_Change>2020-04-05 11:18:15</Step_Last_Change>
         <Current_Step>60</Current_Step>
         <Step_Status>true</Step_Status>
     </Project_Settings>

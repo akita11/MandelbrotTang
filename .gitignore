@@ -3,3 +3,6 @@
 *.area
 *.log
 *.bak
+*.vcd
+*.timing
+*.tsm

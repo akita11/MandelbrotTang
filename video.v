@@ -44,8 +44,7 @@
 `define V_TOTAL		288
 `define V_SYNC		3
 `define V_BACKP		0
-//`define V_ACTIVE	272
-`define V_ACTIVE	255
+`define V_ACTIVE	272
 
 module video(
     input 	        reset, // active high
@@ -69,8 +68,10 @@ module video(
     input 	        we // write pixel enable
 );
 
-    reg [`H_TOTAL - 1:0] hcount;
-    reg [`V_TOTAL - 1:0] vcount;
+//    reg [`H_TOTAL - 1:0] hcount;
+//    reg [`V_TOTAL - 1:0] vcount;
+    reg [9:0] hcount;
+    reg [8:0] vcount;
     reg [8:0] posx;
     reg [7:0] posy;
 
@@ -86,6 +87,7 @@ module video(
     reg [7:0] 	rout_reg;
     reg [7:0] 	gout_reg;
     reg [7:0] 	bout_reg;
+    reg hsync_reg_rd;
 
     wire [16:0] mem_ada, mem_adb; // PortA=write, PortB=read
     wire [2:0]  mem_dout, mem_din;
@@ -99,8 +101,7 @@ module video(
     assign mem_adb = {posy, posx};
 
     //module vram ( dia, addra, cea, clka, dob, addrb, ceb, clkb);
-	vram vram(	mem_din, mem_ada, mem_cea, mem_clk, 
-				mem_dout, mem_adb, mem_ceb, video_clk);
+	vram vram(	mem_din, mem_ada, mem_cea, mem_clk, mem_dout, mem_adb, mem_ceb, video_clk);
 
     // video sync signals
     assign framestart = frame_reg;  // register output
@@ -131,7 +132,16 @@ module video(
 
             if (hcount == `H_TOTAL - 1) hsync_reg <= 1'b1;
             else if (hcount == `H_SYNC - 1) hsync_reg <= 1'b0;
-            if (hsync_reg == 0) posx <= posx + 1; else posx <= 0;
+// memory access timing
+//clk    __~~__~~__~~__...__~~__~~__~~__~~__~~__~~__~~
+//hcount 0 1   2   3        38  39  40
+//hsync  ~~~~~~~~~~~~~~~~~~~~~~~~~~~______
+//posx   0                      0   1
+//dout                              [0] [1]
+
+            if (hcount == `H_TOTAL - 1) hsync_reg_rd <= 1'b1;
+            else if (hcount == `H_SYNC - 3) hsync_reg_rd <= 1'b0;
+            if (hsync_reg_rd == 0) posx <= posx + 1; else posx <= 0;
 
             if (hcount == `H_SYNC + `H_BACKP - 1) hblank_reg <= 1'b0;
             else if (hcount == `H_SYNC + `H_BACKP + `H_ACTIVE - 1)  hblank_reg <= 1'b1;
@@ -144,9 +154,9 @@ module video(
                 end
             end
 
-            if (vcount == `V_TOTAL - 1) vsync_reg <= 1'b1;
+//            if (vcount == `V_TOTAL - 1) vsync_reg <= 1'b1;
+            if (vcount == 255) vsync_reg <= 1'b1;
             else if (vcount == `V_SYNC - 1) vsync_reg <= 1'b0;
- 
 
             if (vcount == `V_SYNC + `V_BACKP - 1) vblank_reg <= 1'b0;
             else if(vcount == `V_SYNC + `V_BACKP + `V_ACTIVE - 1) vblank_reg <= 1'b1;

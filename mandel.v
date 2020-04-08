@@ -48,7 +48,7 @@ module MandelbrotTang(clk24M, rst_n,
    	reg 			fResult; // 0 = diversed, 1 = iteration max reached
    	reg 			fFinish;
    	reg [3:0] st;
-   	reg [7:0] i;
+   	reg [15:0] i;
    	reg [8:0] px, py;
    	reg [`N_BIT - 1:0] cx, cy, x, y, xx, yy, ma, mb, sa, sb;
    	wire [`N_BIT - 1:0] mp, ss;
@@ -133,7 +133,7 @@ module video(
     RX8 rx8(clk24M, rst, RXD, r_data, r_ready);
 
 	assign led_r_b = ~n_byte[0];
-	assign led_g_b = r_ready;
+	assign led_g_b = ~f_operating;
 	assign led_b_b = 1;
 
   	mult m0(ma, mb, mp);  
@@ -157,8 +157,9 @@ module video(
             if (n_byte == 8) r_dcx[7:0] <= r_data;
             if (n_byte == 9) r_dcy[15:8] <= r_data;
             if (n_byte == 10) r_dcy[7:0] <= r_data;
-            if (n_byte == 11) max_iterate <= r_data;
-            if (n_byte == 11) begin
+            if (n_byte == 11) max_iterate[15:8] <= r_data;
+            if (n_byte == 12) max_iterate[7:0] <= r_data;
+            if (n_byte == 12) begin
                 cx <= r_cxs; cy <= r_cys;
 				px <= 0; py <= 0;
                 fFinish <= 0;
@@ -196,15 +197,10 @@ module video(
             f_operating <= 0;
             n_byte <= 0;
             cx <= 0; cy <= 0;
-//  		cx <= `CXS; cy <= `CYS;
             r_cxs <= 0; r_cys <= 0;
             r_dcx <= 0; r_dcy <= 0;
             r_pix_x <= `N_PIX_X; r_pix_y <= `N_PIX_Y;
 	 		max_iterate <= 100;
-
-//            f_operating <= 1;
-//            fIterating <= 1;
-
       	end
       	else begin
 	 	// xx = x * x - y * y + cx

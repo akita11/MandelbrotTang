@@ -11,11 +11,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //	Input frequency:             24.000Mhz
-//	Clock multiplication factor: 35
-//	Clock division factor:       1
+//	Clock multiplication factor: 75
+//	Clock division factor:       2
 //	Clock information:
 //		Clock name	| Frequency 	| Phase shift
-//		C0        	| 70.000000 MHZ	| 0  DEG     
+//		C0        	| 100.000000MHZ	| 0  DEG     
 ///////////////////////////////////////////////////////////////////////////////
 `timescale 1 ns / 100 fs
 
@@ -40,16 +40,16 @@ module pll_main(refclk,
 		.SYNC_ENABLE("DISABLE"),
 		.DERIVE_PLL_CLOCKS("DISABLE"),
 		.GEN_BASIC_CLOCK("DISABLE"),
-		.GMC_GAIN(2),
+		.GMC_GAIN(0),
 		.ICP_CURRENT(9),
 		.KVCO(2),
-		.LPF_CAPACITOR(1),
+		.LPF_CAPACITOR(2),
 		.LPF_RESISTOR(8),
-		.REFCLK_DIV(1),
-		.FBCLK_DIV(35),
+		.REFCLK_DIV(2),
+		.FBCLK_DIV(75),
 		.CLKC0_ENABLE("ENABLE"),
-		.CLKC0_DIV(12),
-		.CLKC0_CPHASE(11),
+		.CLKC0_DIV(9),
+		.CLKC0_CPHASE(8),
 		.CLKC0_FPHASE(0)	)
 	pll_inst (.refclk(refclk),
 		.reset(reset),

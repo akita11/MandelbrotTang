@@ -1,5 +1,5 @@
 // Verilog netlist created by TD v4.6.14756
-// Sun Apr  5 11:10:14 2020
+// Sun Apr  5 15:21:37 2020
 
 `timescale 1ns / 1ps
 module pll_main  // al_ip/pll_main.v(22)
@@ -23,8 +23,8 @@ module pll_main  // al_ip/pll_main.v(22)
     .PROGRAMN_PERSISTN("DISABLE"))
     config_inst ();
   EG_PHY_PLL #(
-    .CLKC0_CPHASE(11),
-    .CLKC0_DIV(12),
+    .CLKC0_CPHASE(8),
+    .CLKC0_DIV(9),
     .CLKC0_DIV2_ENABLE("DISABLE"),
     .CLKC0_ENABLE("ENABLE"),
     .CLKC0_FPHASE(0),
@@ -51,19 +51,19 @@ module pll_main  // al_ip/pll_main.v(22)
     .DERIVE_PLL_CLOCKS("DISABLE"),
     .DPHASE_SOURCE("DISABLE"),
     .DYNCFG("DISABLE"),
-    .FBCLK_DIV(35),
+    .FBCLK_DIV(75),
     .FEEDBK_MODE("NOCOMP"),
     .FEEDBK_PATH("VCO_PHASE_0"),
     .FIN("24.000"),
     .FREQ_LOCK_ACCURACY(2),
     .GEN_BASIC_CLOCK("DISABLE"),
-    .GMC_GAIN(2),
+    .GMC_GAIN(0),
     .GMC_TEST(14),
     .ICP_CURRENT(9),
     .IF_ESCLKSTSW("DISABLE"),
     .INTFB_WAKE("DISABLE"),
     .KVCO(2),
-    .LPF_CAPACITOR(1),
+    .LPF_CAPACITOR(2),
     .LPF_RESISTOR(8),
     .NORESET("DISABLE"),
     .ODIV_MUXC0("DIV"),
@@ -81,7 +81,7 @@ module pll_main  // al_ip/pll_main.v(22)
     .PREDIV_MUXC2("VCO"),
     .PREDIV_MUXC3("VCO"),
     .PREDIV_MUXC4("VCO"),
-    .REFCLK_DIV(1),
+    .REFCLK_DIV(2),
     .REFCLK_SEL("INTERNAL"),
     .STDBY_ENABLE("DISABLE"),
     .STDBY_VCO_ENA("DISABLE"),

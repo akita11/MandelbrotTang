@@ -3,6 +3,7 @@
 `define N_PIX_X 510
 `define N_PIX_Y 255
 
+/*
 // for Q12 format
 `define BIT_INT 4
 `define BIT_FRAC 12
@@ -14,7 +15,6 @@
 `define CYS (~(`N_BIT'b0001_000000000000) + `ONE) // -1.0
 `define DCX    `N_BIT'b0000_000000100000          // 1/64
 `define DCY    `N_BIT'b0000_000000100000          // 1/64
-/*
 */
 
 /*
@@ -31,7 +31,6 @@
 `define DCY    `N_BIT'b0000_0000001000000000          // 1/64
 */
 
-/*
 // for Q20 format
 `define BIT_INT 5
 `define BIT_FRAC 20
@@ -43,7 +42,6 @@
 `define CYS (~(`N_BIT'b00001_00000000000000000000) + `ONE) // -1.0
 `define DCX    `N_BIT'b00000_00000010000000000000          // 1/64
 `define DCY    `N_BIT'b00000_00000010000000000000          // 1/64
-*/
 
 module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,

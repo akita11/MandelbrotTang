@@ -1,22 +1,49 @@
-// for Q12 format
-`define BIT_INT 4
-`define BIT_FRAC 12
-`define N_BIT 16
-`define ONE `N_BIT'b0000_000000000001
-`define TH  `N_BIT'b0100_000000000000 // 4.0
-
 //`define N_PIX_X 192
 //`define N_PIX_Y 128
 `define N_PIX_X 510
 `define N_PIX_Y 255
+
+// for Q12 format
+`define BIT_INT 4
+`define BIT_FRAC 12
+`define N_BIT 16
+`define ONE    `N_BIT'b0000_000000000001
+`define TH     `N_BIT'b0100_000000000000 // 4.0
+
 `define CXS (~(`N_BIT'b0010_000000000000) + `ONE) // -2.0
-//`define CXE    `N_BIT'b0001_000000000000          // +1.0
 `define CYS (~(`N_BIT'b0001_000000000000) + `ONE) // -1.0
-//`define CYE    `N_BIT'b0001_000000000000          // +1.0
 `define DCX    `N_BIT'b0000_000000100000          // 1/64
 `define DCY    `N_BIT'b0000_000000100000          // 1/64
+/*
+*/
 
+/*
+// for Q16 format
+`define BIT_INT 4
+`define BIT_FRAC 16
+`define N_BIT 20
+`define ONE    `N_BIT'b0000_0000000000000001
+`define TH     `N_BIT'b0100_0000000000000000 // 4.0
 
+`define CXS (~(`N_BIT'b0010_0000000000000000) + `ONE) // -2.0
+`define CYS (~(`N_BIT'b0001_0000000000000000) + `ONE) // -1.0
+`define DCX    `N_BIT'b0000_0000001000000000          // 1/64
+`define DCY    `N_BIT'b0000_0000001000000000          // 1/64
+*/
+
+/*
+// for Q20 format
+`define BIT_INT 5
+`define BIT_FRAC 20
+`define N_BIT 25
+`define ONE    `N_BIT'b00000_00000000000000000001
+`define TH     `N_BIT'b00100_00000000000000000000 // 4.0
+
+`define CXS (~(`N_BIT'b00010_00000000000000000000) + `ONE) // -2.0
+`define CYS (~(`N_BIT'b00001_00000000000000000000) + `ONE) // -1.0
+`define DCX    `N_BIT'b00000_00000010000000000000          // 1/64
+`define DCY    `N_BIT'b00000_00000010000000000000          // 1/64
+*/
 
 module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
@@ -88,29 +115,7 @@ module MandelbrotTang(clk24M, rst_n,
 	assign test[1] = lcd_hsync;
 	assign test[2] = lcd_pclk;
 	assign test[3] = lcd_de;
-/*
-module video(
-    input 	  reset, // active high
-    input 	  video_clk, // typ 25.175MHz
-    input 	  scan_ena, // framebuff scan enable
-    output 	  framestart,
-    output 	  linestart,
-    output 	  pixelena, // pixel readout active
-    output 	  hsync,
-    output 	  vsync,
-    output 	  hblank,
-    output 	  vblank,
-    output 	  dotenable,
-    output [7:0] rout, 
-    output [7:0] gout,
-    output [7:0] bout,
-    input mem_clk,
-    input [8:0]  wx, // write pixel X
-    input [7:0]  wy, // write pixel Y
-    input [2:0]  wd, // write pixel data
-    input 	  we // write pixel enable
-);
-*/
+
 	video video(rst, vclk, 1'b1, 
 				framestart, linestart, pixelena, 
 				hsync, vsync, 

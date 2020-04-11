@@ -2,13 +2,20 @@
 #include <M5StickC.h>
 #include "Wire.h"
 
+// ToDo: handle coordinates as binary, insted of double/float to keep accuracy at zoom-in
+
 HardwareSerial uart1(1);
 
+double width = 3;
+double xs = -2.0;
+double ys = -1.0;
+double dp = 0.0125;
+
 // convert float to Q12-formatted 16bit binary
-uint16_t float2q12(float a)
+uint16_t float2q12(double a)
 {
   uint16_t i, f, d;
-  float aa;
+  double aa;
   if (a > 0) aa = a; else aa = -a;
   i = (byte)(aa);
   f = (uint16_t)((aa - (byte)aa) * 4096);
@@ -28,11 +35,6 @@ uint8_t f = 0;
 #define X 511
 #define Y 255
 
-float width = 3;
-float xs = -2.0;
-float ys = -1.0;
-float dp = 0.0125;
-
 void setup() {
   M5.begin();
   Serial.begin(115200);
@@ -40,6 +42,18 @@ void setup() {
   // https://github.com/m5stack/M5-ProductExampleCodes/tree/master/Hat/hat-joystick/Arduino/Joystick_hat
   uart1.begin(115200, SERIAL_8N1, 33, 32); // RX=33/TX=32
   Wire.begin(0, 26, 100000);
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setTextColor(YELLOW);
+  M5.Lcd.setCursor(0, 10); M5.Lcd.print("MandelbrotNav");
+  M5.Lcd.setTextColor(WHITE);
+  M5.Lcd.setCursor(0, 30); M5.Lcd.print("Joystick Btn");
+  M5.Lcd.setCursor(0, 40); M5.Lcd.print(" = Zoom In");
+  M5.Lcd.setCursor(0, 60); M5.Lcd.print("M5 Btn");
+  M5.Lcd.setCursor(0, 70); M5.Lcd.print(" = Zoom Out");
+  M5.Lcd.setCursor(0, 90); M5.Lcd.print("Side Btn");
+  M5.Lcd.setCursor(0,100); M5.Lcd.print(" = Init Pos");
+  M5.Lcd.setCursor(0,120); M5.Lcd.print("JoyStick Move");
+  M5.Lcd.setCursor(0,130); M5.Lcd.print(" = Navi");
 }
 
 int x, y;
@@ -48,14 +62,13 @@ void start_calc()
 {
   send_word(X);
   uart1.write(Y);
-  dp = width / (float)X;
+  dp = width / (double)X;
   send_word(float2q12(xs));
   send_word(float2q12(ys));
   send_word(float2q12(dp));
   send_word(float2q12(dp));
   send_word(100);
   x = 0; y = 0; f = 1;
-//  M5.Lcd.clear(BLACK);
   Serial.println("Settings:");
   Serial.print("x: "); Serial.print(xs);
   Serial.print(" - "); Serial.println(xs + width);
@@ -87,8 +100,8 @@ void loop() {
 #define JOY_TH_M -30
 #define JOY_TH_P 30
 
-    if (jx < JOY_TH_M && fj == 0){ xs -= dp * (X/4); start_calc(); fj = 1;}
-    if (jx > JOY_TH_P && fj == 0){ xs += dp * (X/4); start_calc(); fj = 1;}
+    if (jx < JOY_TH_M && fj == 0){ xs += dp * (X/4); start_calc(); fj = 1;}
+    if (jx > JOY_TH_P && fj == 0){ xs -= dp * (X/4); start_calc(); fj = 1;}
     if (jy < JOY_TH_M && fj == 0){ ys -= dp * (Y/4); start_calc(); fj = 1;}
     if (jy > JOY_TH_P && fj == 0){ ys += dp * (Y/4); start_calc(); fj = 1;}
     if (fj == 1 
@@ -103,8 +116,8 @@ void loop() {
   }
   #define MAG_STEP 1.5
 
+  double xc, yc;
   if (jb0 == 1 && jb == 0) { // zoom-out
-    float xc, yc;
     xc = xs + (width / 2.0); yc = ys + (width / 3.0);
     Serial.println(xc); Serial.println(yc);
     width = width / MAG_STEP;
@@ -115,7 +128,6 @@ void loop() {
   }
   jb0 = jb;
   if (M5.BtnA.wasReleased()) { // zoom-in
-    float xc, yc;
     xc = xs + (width / 2.0); yc = ys + (width / 3.0);
     Serial.println(xc); Serial.println(yc);
     width = width * MAG_STEP;

@@ -3,45 +3,44 @@
 `define N_PIX_X 510
 `define N_PIX_Y 255
 
-/*
-// for Q12 format
+// for Q12 format, 100MHz
 `define BIT_INT 4
 `define BIT_FRAC 12
 `define N_BIT 16
 `define ONE    `N_BIT'b0000_000000000001
 `define TH     `N_BIT'b0100_000000000000 // 4.0
-
 `define CXS (~(`N_BIT'b0010_000000000000) + `ONE) // -2.0
 `define CYS (~(`N_BIT'b0001_000000000000) + `ONE) // -1.0
 `define DCX    `N_BIT'b0000_000000100000          // 1/64
 `define DCY    `N_BIT'b0000_000000100000          // 1/64
-*/
 
 /*
-// for Q16 format
+// for Q16 format, 80MHz
 `define BIT_INT 4
 `define BIT_FRAC 16
 `define N_BIT 20
 `define ONE    `N_BIT'b0000_0000000000000001
 `define TH     `N_BIT'b0100_0000000000000000 // 4.0
-
 `define CXS (~(`N_BIT'b0010_0000000000000000) + `ONE) // -2.0
 `define CYS (~(`N_BIT'b0001_0000000000000000) + `ONE) // -1.0
 `define DCX    `N_BIT'b0000_0000001000000000          // 1/64
 `define DCY    `N_BIT'b0000_0000001000000000          // 1/64
+`define PAD 4'd0 // 0's of N_BIT - 16
 */
 
+/*
 // for Q20 format
 `define BIT_INT 5
 `define BIT_FRAC 20
 `define N_BIT 25
 `define ONE    `N_BIT'b00000_00000000000000000001
 `define TH     `N_BIT'b00100_00000000000000000000 // 4.0
-
 `define CXS (~(`N_BIT'b00010_00000000000000000000) + `ONE) // -2.0
 `define CYS (~(`N_BIT'b00001_00000000000000000000) + `ONE) // -1.0
 `define DCX    `N_BIT'b00000_00000010000000000000          // 1/64
 `define DCY    `N_BIT'b00000_00000010000000000000          // 1/64
+`define PAD 9'd0 // 0's of N_BIT - 16
+*/
 
 module MandelbrotTang(clk24M, rst_n,
 			lcd_pclk, lcd_de, lcd_pwm, lcd_vsync, lcd_hsync, lcd_rout, lcd_gout, lcd_bout,
@@ -75,11 +74,11 @@ module MandelbrotTang(clk24M, rst_n,
    	reg [3:0] st;
    	reg [15:0] i;
    	reg [8:0] px, py;
-   	reg [`N_BIT - 1:0] cx, cy, x, y, xx, yy, ma, mb, sa, sb;
+   	reg [`N_BIT - 1:0] cx, cy, x, y, xx, yy, ma, mb, sa, sb, cxs, cys, dcx, dcy;
    	wire [`N_BIT - 1:0] mp, ss;
 
     reg 		       f_operating;
-    reg [`N_BIT - 1:0]  r_cxs, r_cys, r_dcx, r_dcy;
+    reg [15:0]  r_cxs, r_cys, r_dcx, r_dcy;
     reg [8:0] 	    r_pix_x;
 	reg [7:0] 		r_pix_y;
 //    reg [7:0] 	       t_data;
@@ -163,8 +162,25 @@ module MandelbrotTang(clk24M, rst_n,
             if (n_byte == 11) max_iterate[15:8] <= r_data;
             if (n_byte == 12) max_iterate[7:0] <= r_data;
             if (n_byte == 12) begin
-                cx <= r_cxs; cy <= r_cys;
+/*  
+    	        // for longer than total 20bit format
+                cx <= {r_cxs, `PAD};
+                cy <= {r_cys, `PAD};
+                cxs <= {r_cxs, `PAD};
+                cys <= {r_cys, `PAD};
+                dcx <= {r_dcx, `PAD};
+                dcy <= {r_dcy, `PAD};
+*/
+    	        // for Q12 (total 16bit) format
+                cx <= r_cxs;
+                cy <= r_cys;
+                cxs <= r_cxs;
+                cys <= r_cys;
+                dcx <= r_dcx;
+                dcy <= r_dcy;
+
 				px <= 0; py <= 0;
+				x <= 0; y <= 0;
                 fFinish <= 0;
                 f_operating <= 1;
                 fIterating <= 1;
@@ -259,15 +275,15 @@ module MandelbrotTang(clk24M, rst_n,
 
 	    		// pixel coornidate update
 	    		py <= py + 1;
-	    		cy <= cy + r_dcy;
+	    		cy <= cy + dcy;
 	    		if (py == r_pix_y) begin
 	       			py <= 0;
 	       			px <= px + 1;
-	       			cy <= r_cys;
-	       			cx <= cx + r_dcx;
+	       			cy <= cys;
+	       			cx <= cx + dcx;
 	       			if (px == r_pix_x) begin
 		  				px <= 0;
-		  				cx <= r_cxs;
+		  				cx <= cxs;
 		  				fFinish <= 1;
 		  				f_operating <= 0;
 		  				fIterating <= 0;
@@ -300,13 +316,16 @@ endmodule
 module mult(a, b, x);
    	input [`N_BIT - 1:0] a, b;
    	output [`N_BIT - 1:0] x;
-   	wire [`N_BIT - 1:0] 	 a0, b0;
+   	wire [`N_BIT - 1:0] a0, b0;
    	wire [2*`N_BIT - 1:0] x_tmp;
-   	wire 		 sa, sb;
-   	// 0x10000 x 0x10000 = 0x10000_0000
+   	wire sa, sb;
+   	// 0x10000 x 0x10000 = 0x010000_0000 [35:16]
    	// 0x1.0000 x 0x1.0000 = 0x1.0000
-   	assign sa = a[`N_BIT - 1];
-   	assign sb = b[`N_BIT - 1];
+
+   	// 0x1000 x 0x1000 = 0x01000_000 [27:12]
+   	// 0x1.000 x 0x1.000 = 0x1.000
+   	assign sa = a[`N_BIT - 1]; // sign bit
+   	assign sb = b[`N_BIT - 1]; // sign bit
    	assign a0 = (sa == 0)?a:(~a+1);
    	assign b0 = (sb == 0)?b:(~b+1);
    	assign x_tmp = ((sa ^ sb) == 0)?(a0 * b0):(~(a0 * b0) + 1);
